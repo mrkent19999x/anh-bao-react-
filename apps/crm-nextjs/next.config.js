@@ -1,32 +1,19 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'export',
+  trailingSlash: true,
+  images: {
+    unoptimized: true
+  },
   experimental: {
     appDir: true,
   },
-  images: {
-    domains: ['images.unsplash.com', 'via.placeholder.com'],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'origin-when-cross-origin',
-          },
-        ],
-      },
-    ]
-  },
+  // Remove PWA config for static export
+  // withPWA: {
+  //   dest: 'public',
+  //   register: true,
+  //   skipWaiting: true,
+  // },
 }
 
 module.exports = nextConfig
