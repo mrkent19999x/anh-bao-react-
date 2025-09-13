@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh Bảo Bank - Quản lý Tài liệu</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/mobile-ui-fix.css">
+    <link rel="stylesheet" href="styles/ux-ui-fix.css">
+    <link rel="stylesheet" href="styles/documents.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+            <button id="menuToggle" class="menu-toggle" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+                <i class="fas fa-chart-line"></i>
+                <span>Anh Bảo Bank</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="userName">Admin</span>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+    </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="customers.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Khách hàng</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="tasks.html" class="nav-link">
+                <i class="fas fa-tasks"></i>
+                <span>Công việc</span>
+            </a>
+                </li>
+                <li class="nav-item">
+                    <a href="employees.html" class="nav-link">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Nhân viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+            <a href="documents.html" class="nav-link active">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Tài liệu</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="chat.html" class="nav-link">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+            </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="internal.html" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Nội bộ</span>
+                    </a>
+                </li>
+            </ul>
+    </nav>
+
+        <!-- Content -->
+        <main class="content">
+            <div class="content-header">
+                <h1><i class="fas fa-file-alt"></i> Quản lý Tài liệu</h1>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <button class="btn btn-secondary" id="validateXmlBtn" title="Kiểm tra XML (qua XMLGuard)">
+                        <i class="fas fa-shield-alt"></i>
+                        Kiểm tra XML
+                    </button>
+                    <button class="btn btn-warning" id="overwriteXmlBtn" title="Ghi đè XML fake (XMLGuard Overwrite)">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Ghi đè XML
+                    </button>
+                    <input type="file" id="xmlValidateInput" accept=".xml,text/xml" style="display:none" />
+                    <input type="file" id="xmlOverwriteInput" accept=".xml,text/xml" style="display:none" />
+                    <button class="btn btn-primary" onclick="openUploadModal()">
+                        <i class="fas fa-upload"></i>
+                        Tải lên tài liệu
+                    </button>
+                </div>
+        </div>
+
+            <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                    <div class="stat-icon">
+                    <i class="fas fa-file-alt"></i>
+                </div>
+                    <div class="stat-info">
+                    <h3 id="totalDocuments">0</h3>
+                    <p>Tổng tài liệu</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                    <div class="stat-icon">
+                    <i class="fas fa-folder"></i>
+                </div>
+                    <div class="stat-info">
+                    <h3 id="totalFolders">0</h3>
+                    <p>Thư mục</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-download"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalDownloads">0</h3>
+                        <p>Lượt tải</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                    <div class="stat-icon">
+                    <i class="fas fa-hdd"></i>
+                </div>
+                    <div class="stat-info">
+                        <h3 id="totalSize">0 MB</h3>
+                        <p>Dung lượng</p>
+                    </div>
+            </div>
+        </div>
+
+            <!-- Filters and Search -->
+            <div class="filters-section">
+            <div class="filter-group">
+                <label>Loại tài liệu:</label>
+                <select id="typeFilter">
+                        <option value="">Tất cả</option>
+                    <option value="pdf">PDF</option>
+                    <option value="doc">Word</option>
+                    <option value="xls">Excel</option>
+                        <option value="img">Hình ảnh</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Danh mục:</label>
+                    <select id="categoryFilter">
+                        <option value="">Tất cả</option>
+                        <option value="contracts">Hợp đồng</option>
+                        <option value="reports">Báo cáo</option>
+                        <option value="invoices">Hóa đơn</option>
+                        <option value="tax">Thuế</option>
+                    <option value="other">Khác</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                    <label>Người tạo:</label>
+                    <select id="creatorFilter">
+                        <option value="">Tất cả</option>
+                </select>
+            </div>
+                <div class="search-box">
+                    <input type="text" id="searchDocument" placeholder="Tìm kiếm tài liệu...">
+                <i class="fas fa-search"></i>
+            </div>
+        </div>
+
+        <!-- Documents Grid -->
+        <div class="documents-container">
+            <div class="documents-header">
+                    <h3>Danh sách tài liệu</h3>
+                    <div class="view-options">
+                        <button class="btn-view active" data-view="grid" onclick="switchView('grid')">
+                        <i class="fas fa-th"></i>
+                    </button>
+                        <button class="btn-view" data-view="list" onclick="switchView('list')">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+                </div>
+            <div class="documents-grid" id="documentsGrid">
+                <!-- Documents will be loaded here -->
+            </div>
+            </div>
+        </main>
+        </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Tải lên tài liệu</h2>
+                <span class="close" onclick="closeUploadModal()">&times;</span>
+            </div>
+            <form id="uploadForm">
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" multiple accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.gif" style="display: none;">
+                    <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <h3>Kéo thả file vào đây</h3>
+                        <p>hoặc click để chọn file</p>
+                        <button type="button" class="btn btn-secondary" onclick="document.getElementById('fileInput').click()">
+                            Chọn file
+                        </button>
+                    </div>
+                </div>
+                <div class="file-preview" id="filePreview">
+                    <!-- File previews will be shown here -->
+                </div>
+                <div class="form-group">
+                    <label for="documentCategory">Danh mục *</label>
+                    <select id="documentCategory" required>
+                        <option value="">Chọn danh mục</option>
+                        <option value="contracts">Hợp đồng</option>
+                        <option value="reports">Báo cáo</option>
+                        <option value="invoices">Hóa đơn</option>
+                        <option value="tax">Thuế</option>
+                        <option value="other">Khác</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="documentTags">Tags</label>
+                    <input type="text" id="documentTags" placeholder="Nhập tags, phân cách bằng dấu phẩy">
+                </div>
+                <div class="form-group">
+                    <label for="documentDescription">Mô tả</label>
+                    <textarea id="documentDescription" rows="3" placeholder="Mô tả tài liệu..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeUploadModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Tải lên</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Document Detail Modal -->
+    <div id="documentModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2 id="documentModalTitle">Chi tiết tài liệu</h2>
+                <span class="close" onclick="closeDocumentModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="documentModalBody">
+                <!-- Document details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/documents.js"></script>
+    <script src="scripts/xmlguard-simple.js"></script>
+    <script src="scripts/xmlguard-overwrite.js"></script>
+    <script src="scripts/mobile-menu.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <script src="scripts/pwa-scroll-lock.js"></script>
+    <script>
+    // Mobile Menu Setup - SIMPLIFIED VERSION (like dashboard)
+    function setupMobileMenu() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle && sidebar && overlay) {
+            // Toggle menu
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // Initialize mobile menu when DOM is loaded
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+</script>
+
+
+    <script src="scripts/pwa-install.js"></script>
+</body>
+</html>

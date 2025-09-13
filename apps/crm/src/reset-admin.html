@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Admin - Anh Bảo Bank</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        .warning {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: #dc3545;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        .btn:hover {
+            background: #c82333;
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .btn-success {
+            background: #28a745;
+        }
+        .btn-success:hover {
+            background: #218838;
+        }
+        .message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Reset Tài Khoản Admin</h1>
+        
+        <div class="warning">
+            <strong>⚠️ CẢNH BÁO:</strong> Thao tác này sẽ xóa tài khoản admin hiện tại và tạo lại. Chỉ sử dụng khi cần thiết!
+        </div>
+        
+        <div class="info">
+            <strong>Thông tin tài khoản mới:</strong><br>
+            Email: admin@anhbao.com<br>
+            Password: password123
+        </div>
+        
+        <button id="resetBtn" class="btn">Xóa Admin Cũ & Tạo Mới</button>
+        <button id="createBtn" class="btn btn-success" style="display: none;">Tạo Admin Mới</button>
+        
+        <div id="message" class="message" style="display: none;"></div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="login.html" style="color: #667eea; text-decoration: none;">← Quay lại trang đăng nhập</a>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+
+    <script>
+        let isProcessing = false;
+
+        document.getElementById('resetBtn').addEventListener('click', async function() {
+            if (isProcessing) return;
+            
+            const resetBtn = document.getElementById('resetBtn');
+            const createBtn = document.getElementById('createBtn');
+            const messageDiv = document.getElementById('message');
+            
+            resetBtn.disabled = true;
+            resetBtn.textContent = 'Đang xử lý...';
+            isProcessing = true;
+            
+            try {
+                // Đăng nhập với tài khoản admin hiện tại (nếu có)
+                const email = 'admin@anhbao.com';
+                const password = 'password123';
+                
+                console.log('Đang thử đăng nhập để xóa tài khoản...');
+                
+                try {
+                    await auth.signInWithEmailAndPassword(email, password);
+                    console.log('Đăng nhập thành công, đang xóa tài khoản...');
+                    
+                    // Xóa document trong Firestore
+                    const user = auth.currentUser;
+                    if (user) {
+                        await db.collection('users').doc(user.uid).delete();
+                        console.log('Đã xóa document trong Firestore');
+                        
+                        // Xóa user trong Firebase Auth
+                        await user.delete();
+                        console.log('Đã xóa user trong Firebase Auth');
+                    }
+                    
+                    messageDiv.textContent = '✅ Đã xóa tài khoản admin cũ thành công!';
+                    messageDiv.className = 'message success';
+                    messageDiv.style.display = 'block';
+                    
+                    // Hiện nút tạo admin mới
+                    createBtn.style.display = 'block';
+                    resetBtn.style.display = 'none';
+                    
+                } catch (loginError) {
+                    console.log('Không thể đăng nhập với tài khoản cũ:', loginError.code);
+                    
+                    if (loginError.code === 'auth/user-not-found' || loginError.code === 'auth/invalid-login-credentials') {
+                        messageDiv.textContent = 'ℹ️ Tài khoản admin chưa tồn tại hoặc mật khẩu sai, có thể tạo mới';
+                        messageDiv.className = 'message success';
+                        messageDiv.style.display = 'block';
+                        
+                        createBtn.style.display = 'block';
+                        resetBtn.style.display = 'none';
+                    } else {
+                        throw loginError;
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Lỗi reset admin:', error);
+                
+                let errorMessage = 'Lỗi không xác định';
+                if (error.code) {
+                    errorMessage = getErrorMessage(error.code);
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                messageDiv.textContent = `❌ Lỗi: ${errorMessage}`;
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                
+                resetBtn.disabled = false;
+                resetBtn.textContent = 'Xóa Admin Cũ & Tạo Mới';
+                isProcessing = false;
+            }
+        });
+
+        document.getElementById('createBtn').addEventListener('click', async function() {
+            if (isProcessing) return;
+            
+            const createBtn = document.getElementById('createBtn');
+            const messageDiv = document.getElementById('message');
+            
+            createBtn.disabled = true;
+            createBtn.textContent = 'Đang tạo...';
+            isProcessing = true;
+            
+            try {
+                const email = 'admin@anhbao.com';
+                const password = 'password123';
+                const fullName = 'Admin Anh Bảo';
+                const phone = '0123456789';
+                
+                console.log('Đang tạo admin mới...');
+                
+                // Tạo user trong Firebase Auth
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+                
+                console.log('User created:', user.uid);
+
+                // Tạo document trong Firestore
+                await db.collection('users').doc(user.uid).set({
+                    fullName: fullName,
+                    email: email,
+                    phone: phone,
+                    role: 'admin',
+                    status: 'active',
+                    createdAt: new Date(),
+                    lastLogin: new Date()
+                });
+
+                console.log('Admin data saved to Firestore');
+
+                messageDiv.textContent = `✅ Tạo admin thành công! Email: ${email}`;
+                messageDiv.className = 'message success';
+                messageDiv.style.display = 'block';
+
+                // Tự động chuyển về trang login sau 3 giây
+                setTimeout(() => {
+                    auth.signOut();
+                    window.location.href = 'login.html';
+                }, 3000);
+
+            } catch (error) {
+                console.error('Lỗi tạo admin:', error);
+                
+                let errorMessage = 'Lỗi không xác định';
+                if (error.code) {
+                    errorMessage = getErrorMessage(error.code);
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+                
+                messageDiv.textContent = `❌ Lỗi: ${errorMessage}`;
+                messageDiv.className = 'message error';
+                messageDiv.style.display = 'block';
+                
+                createBtn.disabled = false;
+                createBtn.textContent = 'Tạo Admin Mới';
+                isProcessing = false;
+            }
+        });
+
+        function getErrorMessage(errorCode) {
+            const errorMessages = {
+                'auth/email-already-in-use': 'Email đã được sử dụng',
+                'auth/invalid-email': 'Email không hợp lệ',
+                'auth/weak-password': 'Mật khẩu quá yếu (cần ít nhất 6 ký tự)',
+                'auth/operation-not-allowed': 'Tạo tài khoản bị vô hiệu hóa',
+                'auth/network-request-failed': 'Lỗi kết nối mạng',
+                'auth/user-disabled': 'Tài khoản bị vô hiệu hóa',
+                'auth/user-not-found': 'Không tìm thấy tài khoản',
+                'auth/wrong-password': 'Mật khẩu sai',
+                'auth/too-many-requests': 'Quá nhiều yêu cầu, thử lại sau',
+                'auth/invalid-api-key': 'API Key không hợp lệ',
+                'auth/invalid-credential': 'Thông tin đăng nhập không hợp lệ',
+                'auth/requires-recent-login': 'Cần đăng nhập lại để thực hiện thao tác này'
+            };
+            return errorMessages[errorCode] || `Lỗi: ${errorCode}`;
+        }
+    </script>
+</body>
+</html> 

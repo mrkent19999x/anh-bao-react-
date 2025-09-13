@@ -1,0 +1,167 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function to get user's role
+    function getUserRole(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data.role;
+    }
+
+    // Helper function to check if user is admin
+    function isAdmin(userId) {
+      return getUserRole(userId) == 'admin';
+    }
+
+    // Helper function to check if user is manager (or admin)
+    function isManager(userId) {
+      return isAdmin(userId) || getUserRole(userId) == 'manager';
+    }
+
+    // Helper function to check if user is accountant (or admin)
+    function isAccountant(userId) {
+      return isAdmin(userId) || getUserRole(userId) == 'accountant';
+    }
+
+    // Helper function to check if user is staff (or admin/manager/accountant)
+    function isStaff(userId) {
+      return isAdmin(userId) || isManager(userId) || isAccountant(userId) || getUserRole(userId) == 'staff';
+    }
+
+    // Helper function to check if user is agent (or admin/manager/accountant/staff)
+    function isAgent(userId) {
+      return isStaff(userId) || getUserRole(userId) == 'agent';
+    }
+
+    // --- Core Collections --- 
+
+    // users collection:
+    // - Authenticated users can read/write their own profile.
+    // - Admins can read/write all user profiles.
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin(request.auth.uid));
+      allow write: if request.auth != null && (request.auth.uid == userId || isAdmin(request.auth.uid));
+    }
+
+    // settings/roles/definitions collection: Only admins can read/write
+    match /settings/roles/definitions/{roleId} {
+      allow read, write: if request.auth != null && isAdmin(request.auth.uid);
+    }
+
+    // customers collection:
+    // - Staff/Sales can only read/write their assigned customers.
+    // - Managers can read all customers, but only write to assigned ones.
+    // - Admins can read/write all customers.
+    match /customers/{customerId} {
+      allow read: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) || // Managers can see all customers
+        (isStaff(request.auth.uid) && resource.data.assignedTo == request.auth.uid) || // Staff sees only their assigned
+        (isAgent(request.auth.uid) && resource.data.assignedTo == request.auth.uid)
+      );
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        (isManager(request.auth.uid) && resource.data.assignedTo == request.auth.uid) || // Managers can write assigned
+        (isStaff(request.auth.uid) && resource.data.assignedTo == request.auth.uid) ||
+        (isAgent(request.auth.uid) && resource.data.assignedTo == request.auth.uid)
+      );
+      allow create: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) ||
+        isStaff(request.auth.uid) ||
+        isAgent(request.auth.uid)
+      );
+    }
+
+    // tasks collection: Similar to customers
+    match /tasks/{taskId} {
+      allow read: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) ||
+        (isStaff(request.auth.uid) && resource.data.assignedTo == request.auth.uid) ||
+        (isAgent(request.auth.uid) && resource.data.assignedTo == request.auth.uid)
+      );
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        (isManager(request.auth.uid) && resource.data.assignedTo == request.auth.uid) ||
+        (isStaff(request.auth.uid) && resource.data.assignedTo == request.auth.uid) ||
+        (isAgent(request.auth.uid) && resource.data.assignedTo == request.auth.uid)
+      );
+      allow create: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) ||
+        isStaff(request.auth.uid) ||
+        isAgent(request.auth.uid)
+      );
+    }
+
+    // documents collection: Similar to customers/tasks
+    match /documents/{documentId} {
+      allow read: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) ||
+        (isStaff(request.auth.uid) && resource.data.uploadedBy == request.auth.uid) || // Staff sees only their uploaded
+        (isAgent(request.auth.uid) && resource.data.uploadedBy == request.auth.uid)
+      );
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        (isManager(request.auth.uid) && resource.data.uploadedBy == request.auth.uid) ||
+        (isStaff(request.auth.uid) && resource.data.uploadedBy == request.auth.uid) ||
+        (isAgent(request.auth.uid) && resource.data.uploadedBy == request.auth.uid)
+      );
+      allow create: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        isManager(request.auth.uid) ||
+        isStaff(request.auth.uid) ||
+        isAgent(request.auth.uid)
+      );
+    }
+
+    // conversations & messages:
+    // - Participants can read/write.
+    // - Admins can read/write all.
+    match /conversations/{conversationId} {
+      allow read: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        resource.data.participants.hasAny([request.auth.uid])
+      );
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        resource.data.participants.hasAny([request.auth.uid])
+      );
+      allow create: if request.auth != null; // Any authenticated user can create a conversation
+    }
+
+    match /messages/{messageId} {
+      allow read: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        get(/databases/$(database)/documents/conversations/$(resource.data.conversationId)).data.participants.hasAny([request.auth.uid])
+      );
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        get(/databases/$(database)/documents/conversations/$(resource.data.conversationId)).data.participants.hasAny([request.auth.uid])
+      );
+      allow create: if request.auth != null; // Any authenticated user can create a message
+    }
+
+    // forms collection:
+    // - Public read for specific form IDs (if form is public).
+    // - Authenticated users can create forms.
+    // - Only the creator or admin can write to a form.
+    match /forms/{formId} {
+      allow read: if true; // Public read for form access (e.g., customer filling it out)
+      allow write: if request.auth != null && (
+        isAdmin(request.auth.uid) ||
+        resource.data.createdBy == request.auth.uid
+      );
+      allow create: if request.auth != null; // Any authenticated user can create a form
+    }
+
+    // chatbot-messages collection:
+    // - Public read for bot responses.
+    // - Authenticated users can write.
+    match /chatbot-messages/{messageId} {
+      allow read: if true; // Public read for bot responses
+      allow write: if request.auth != null; // Any authenticated user can write
+    }
+  }
+}

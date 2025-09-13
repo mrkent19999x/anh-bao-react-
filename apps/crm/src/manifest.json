@@ -1,0 +1,90 @@
+{
+  "name": "Anh Bảo Bank - Hệ thống Quản lý Nội bộ",
+  "short_name": "Anh Bảo Bank",
+  "description": "Hệ thống quản lý nội bộ cho việc kết nối ngân hàng - thuế - khách hàng",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1e3a8a",
+  "theme_color": "#1e3a8a",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "vi",
+  "dir": "ltr",
+  "categories": ["business", "productivity", "finance"],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "launch_handler": {
+    "client_mode": "navigate-existing"
+  },
+  "handle_links": "preferred",
+  "protocol_handlers": [
+    {
+      "protocol": "web+anhbaobank",
+      "url": "/?action=%s"
+    }
+  ],
+  "icons": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMjQiIGZpbGw9IiMxZTNhOGEiLz4KPHN2ZyB4PSI0OCIgeT0iNDgiIHdpZHRoPSI5NiIgaGVpZ2h0PSI5NiIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJ3aGl0ZSI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyeiIvPgo8cGF0aCBkPSJNMTIgNkM4LjY5IDYgNiA4LjY5IDYgMTJzMi42OSA2IDYgNiA2LTIuNjkgNi02LTIuNjktNi02LTZ6Ii8+CjxwYXRoIGQ9Ik0xMiAxNEMxMC45IDkgMTQgOCAxNCA4czMgMS45IDAgNnoiLz4KPC9zdmc+Cjwvc3ZnPgo=",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDUxMiA1MTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiByeD0iNjQiIGZpbGw9IiMxZTNhOGEiLz4KPHN2ZyB4PSIxMjgiIHk9IjEyOCIgd2lkdGg9IjI1NiIgaGVpZ2h0PSIyNTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPgo8cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnoiLz4KPHBhdGggZD0iTTEyIDZDOC42OSA2IDYgOC42OSA2IDEycyAyLjY5IDYgNiA2IDYtMi42OSA2LTYtMi42OS02LTYtNnoiLz4KPHBhdGggZD0iTTEyIDE0QzEwLjkgOSAxNCA4IDE0IDhzMyAxLjkgMCA2eiIvPgo8L3N2Zz4KPC9zdmc+Cg==",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjU2OCIgdmlld0JveD0iMCAwIDMyMCA1NjgiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMjAiIGhlaWdodD0iNTY4IiBmaWxsPSIjRURFRERFIi8+CjxyZWN0IHg9IjE2IiB5PSIxNiIgd2lkdGg9IjI4OCIgaGVpZ2h0PSI1MzYiIHJ4PSIxMiIgZmlsbD0id2hpdGUiLz4KPHN2ZyB4PSIxNjAiIHk9IjQwIiB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzg0Qjg4MyI+CjxwYXRoIGQ9Ik0xMiAyQzYuNDggMiAyIDYuNDggMiAxMnM0LjQ4IDEwIDEwIDEwIDEwLTQuNDggMTAtMTBTMTcuNTIgMiAxMiAyeiIvPgo8cGF0aCBkPSJNMTIgNkM4LjY5IDYgNiA4LjY5IDYgMTJzMi42OSA2IDYgNiA2LTIuNjkgNi02LTIuNjktNi02LTZ6Ii8+CjxwYXRoIGQ9Ik0xMiAxNEMxMC45IDkgMTQgOCAxNCA4czMgMS45IDAgNnoiLz4KPC9zdmc+Cjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzMzMyIgdGV4dC1hbmNob3I9Im1pZGRsZSI+QW5oIEJhbyBCYW5rPC90ZXh0Pgo8L3N2Zz4K",
+      "sizes": "320x568",
+      "type": "image/svg+xml",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Quản lý Khách hàng",
+      "short_name": "Khách hàng",
+      "description": "Xem và quản lý danh sách khách hàng",
+      "url": "/customers.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzg0Qjg4MyI+CjxwYXRoIGQ9Ik0xNiAxM0MxNiAxMi4zIDE2LjMgMTIgMTcgMTJIMTlDMTkuNyAxMiAyMCAxMi4zIDIwIDEzVjE5QzIwIDE5LjcgMTkuNyAyMCAxOSAyMEg1QzQuMyAyMCA0IDE5LjcgNCAxOVYxM0M0IDEyLjMgNC4zIDEyIDUgMTJIN0M3LjcgMTIgOCAxMi4zIDggMTNWMTlIMTZWMTNaIi8+CjxwYXRoIGQ9Ik0xMiA2QzEwLjkgNiAxMCA2LjkgMTAgOFMxMC45IDEwIDEyIDEwIDE0IDkuMSAxNCA4IDEzLjEgNiAxMiA2WiIvPgo8cGF0aCBkPSJNMTIgMTJDMTAgOSAxMCA5IDEwIDlIMTRDMTQgOSAxNCA5IDEyIDEyWiIvPgo8L3N2Zz4K",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Quản lý Công việc",
+      "short_name": "Công việc",
+      "description": "Xem và quản lý danh sách công việc",
+      "url": "/tasks.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzg0Qjg4MyI+CjxwYXRoIGQ9Ik0xOSAzSDVDMy44OSAzIDMgMy44OSAzIDVWMTlDMyAyMC4xMSAzLjg5IDIxIDUgMjFIMTlDMjAuMTEgMjEgMjEgMjAuMTEgMjEgMTlWNUMyMSAzLjg5IDIwLjExIDMgMTkgM1pNMTkgMTlINVY1SDE5VjE5WiIvPgo8cGF0aCBkPSJNMTAgMTdMMTQgMTdMMTQgMTVMMTAgMTVMMTAgMTdaIi8+CjxwYXRoIGQ9Ik0xMCAxM0wxNCAxM0wxNCAxMUwxMCAxMUwxMCAxM1oiLz4KPHBhdGggZD0iTTEwIDlMMTQgOUwxNCA3TDEwIDdMMTAgOVoiLz4KPC9zdmc+Cg==",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Chat & Tương tác",
+      "short_name": "Chat",
+      "description": "Hệ thống chat nội bộ và chatbot",
+      "url": "/chat.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzg0Qjg4MyI+CjxwYXRoIGQ9Ik0yMCAySDRDMi45IDIgMiAyLjkgMiA0VjIyTDEwIDE4SDIwQzIxLjEgMTggMjIgMTcuMSAyMiAxNlY0QzIyIDIuOSAyMS4xIDIgMjAgMloiLz4KPHBhdGggZD0iTTYgMTJIMThWMTBINlYxMloiLz4KPHBhdGggZD0iTTYgMTVIMTRWMTNINlYxNVoiLz4KPC9zdmc+Cg==",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "related_applications": []
+} 

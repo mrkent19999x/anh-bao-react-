@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh Bảo Bank - Chat</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/mobile-ui-fix.css">
+    <link rel="stylesheet" href="styles/ux-ui-fix.css">
+    <link rel="stylesheet" href="styles/chat.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">
+            <button id="menuToggle" class="menu-toggle" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+                <i class="fas fa-chart-line"></i>
+                <span>Anh Bảo Bank</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="userName">Admin</span>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+    </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="customers.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Khách hàng</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="tasks.html" class="nav-link">
+                <i class="fas fa-tasks"></i>
+                <span>Công việc</span>
+            </a>
+                </li>
+                <li class="nav-item">
+                    <a href="employees.html" class="nav-link">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Nhân viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+            <a href="documents.html" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Tài liệu</span>
+            </a>
+                </li>
+                <li class="nav-item">
+            <a href="chat.html" class="nav-link active">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+            </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="internal.html" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Nội bộ</span>
+                    </a>
+                </li>
+            </ul>
+    </nav>
+
+        <!-- Content -->
+        <main class="content">
+            <div class="content-header">
+                <h1><i class="fas fa-comments"></i> Chat</h1>
+                <button class="btn btn-primary" onclick="openNewChatModal()">
+                        <i class="fas fa-plus"></i>
+                    Cuộc trò chuyện mới
+                    </button>
+                </div>
+
+            <!-- Chat Container -->
+            <div class="chat-container">
+                <!-- Conversations List -->
+                <div class="conversations-panel">
+                    <div class="panel-header">
+                        <h3>Cuộc trò chuyện</h3>
+                        <div class="search-box">
+                            <input type="text" id="searchConversation" placeholder="Tìm kiếm...">
+                    <i class="fas fa-search"></i>
+                </div>
+                    </div>
+                    <div class="conversations-list" id="conversationsList">
+                        <!-- Conversations will be loaded here -->
+                    </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area">
+                    <div class="chat-header" id="chatHeader">
+                        <div class="chat-info">
+                            <div class="chat-avatar">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="chat-details">
+                                <h3 id="currentChatName">Chọn cuộc trò chuyện</h3>
+                                <p id="currentChatStatus">Để bắt đầu chat</p>
+                            </div>
+                        </div>
+                        <div class="chat-actions">
+                            <button class="btn-action" onclick="toggleChatInfo()" title="Thông tin">
+                                <i class="fas fa-info-circle"></i>
+                            </button>
+                            <button class="btn-action" onclick="clearChat()" title="Xóa chat">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="messages-container" id="messagesContainer">
+                        <div class="welcome-message">
+                            <i class="fas fa-comments"></i>
+                            <h3>Chào mừng đến với Chat CRM</h3>
+                            <p>Chọn một cuộc trò chuyện để bắt đầu</p>
+                        </div>
+                    </div>
+
+                    <div class="message-input-container">
+                        <div class="input-wrapper">
+                            <input type="text" id="messageInput" placeholder="Nhập tin nhắn..." disabled>
+                            <button class="btn-send" id="sendButton" disabled>
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                        <div class="input-actions">
+                            <button class="btn-attachment" title="Đính kèm file">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <button class="btn-emoji" title="Emoji">
+                                <i class="fas fa-smile"></i>
+                            </button>
+                        </div>
+                    </div>
+                        </div>
+
+                <!-- Chat Info Panel -->
+                <div class="chat-info-panel" id="chatInfoPanel">
+                    <div class="info-header">
+                        <h3>Thông tin cuộc trò chuyện</h3>
+                        <button class="btn-close" onclick="toggleChatInfo()">
+                            <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    <div class="info-content" id="chatInfoContent">
+                        <!-- Chat info will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+        </div>
+
+    <!-- New Chat Modal -->
+    <div id="newChatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Cuộc trò chuyện mới</h2>
+                <span class="close" onclick="closeNewChatModal()">&times;</span>
+            </div>
+            <form id="newChatForm">
+                <div class="form-group">
+                    <label for="chatType">Loại cuộc trò chuyện *</label>
+                    <select id="chatType" required>
+                        <option value="">Chọn loại</option>
+                        <option value="customer">Với khách hàng</option>
+                        <option value="internal">Nội bộ</option>
+                        <option value="support">Hỗ trợ</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="chatTitle">Tiêu đề *</label>
+                    <input type="text" id="chatTitle" required>
+                </div>
+                <div class="form-group">
+                    <label for="chatParticipants">Người tham gia</label>
+                    <select id="chatParticipants" multiple>
+                        <!-- Participants will be loaded here -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="chatDescription">Mô tả</label>
+                    <textarea id="chatDescription" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeNewChatModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Tạo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/chat.js"></script>
+    <script src="scripts/mobile-menu.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <script src="scripts/pwa-scroll-lock.js"></script>
+    <script>
+    // Mobile Menu Setup - SIMPLIFIED VERSION (like dashboard)
+    function setupMobileMenu() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle && sidebar && overlay) {
+            // Toggle menu
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // Initialize mobile menu when DOM is loaded
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+</script>
+
+
+    <script src="scripts/pwa-install.js"></script>
+</body>
+</html> 

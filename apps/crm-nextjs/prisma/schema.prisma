@@ -1,0 +1,157 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  phone     String?
+  position  String?
+  department String?
+  avatar    String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  customers Customer[]
+  tasks     Task[]
+  documents Document[]
+  reports   Report[]
+
+  @@map("users")
+}
+
+model Customer {
+  id          String   @id @default(cuid())
+  name        String
+  email       String   @unique
+  phone       String
+  company     String?
+  address     String?
+  status      String   @default("active") // active, pending, inactive
+  priority    String   @default("medium") // high, medium, low
+  totalValue  Float    @default(0)
+  lastContact DateTime?
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  tasks      Task[]
+  documents  Document[]
+  reports    Report[]
+
+  @@map("customers")
+}
+
+model Task {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  status      String   @default("pending") // pending, in-progress, completed, cancelled
+  priority    String   @default("medium") // high, medium, low
+  dueDate     DateTime?
+  progress    Int      @default(0)
+  estimatedTime String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+
+  @@map("tasks")
+}
+
+model Document {
+  id          String   @id @default(cuid())
+  name        String
+  type        String
+  size        String
+  category    String
+  description String?
+  tags        String[]
+  status      String   @default("pending") // approved, pending, rejected
+  downloadCount Int    @default(0)
+  filePath    String
+  thumbnail   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+
+  @@map("documents")
+}
+
+model Report {
+  id          String   @id @default(cuid())
+  title       String
+  type        String   // sales, customers, performance
+  period      String
+  status      String   @default("pending") // completed, pending, error
+  totalRevenue Float   @default(0)
+  growth      Float    @default(0)
+  customers   Int      @default(0)
+  orders      Int      @default(0)
+  data        Json?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  customerId String?
+  customer   Customer? @relation(fields: [customerId], references: [id])
+
+  @@map("reports")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  type      String   @default("text") // text, image, file
+  isBot     Boolean  @default(false)
+  status    String   @default("sent") // sent, delivered, read
+  createdAt DateTime @default(now())
+
+  // Relations
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+
+  @@map("chat_messages")
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  name        String
+  type        String   @default("private") // private, group
+  lastMessage String?
+  unread      Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  messages ChatMessage[]
+
+  @@map("conversations")
+}

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Điền thông tin - Anh Bảo Bank</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/form.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Đang tải form...</p>
+    </div>
+
+    <!-- Form Container -->
+    <div class="form-container">
+        <div class="form-card">
+            <!-- Header -->
+            <div class="form-header">
+                <div class="logo">
+                    <i class="fas fa-chart-line"></i>
+                                               <h1>Anh Bảo Bank</h1>
+                </div>
+                <p class="form-subtitle">Vui lòng điền thông tin để chúng tôi có thể hỗ trợ bạn tốt nhất</p>
+            </div>
+
+            <!-- Form ID Display -->
+            <div class="form-id-display">
+                <span class="form-id-label">Mã form:</span>
+                <span id="formId" class="form-id-value">Đang tải...</span>
+            </div>
+
+            <!-- Main Form -->
+            <form id="customerForm" class="customer-form">
+                <!-- Personal Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Thông tin cá nhân</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="fullName">Họ và tên *</label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="Nhập họ và tên đầy đủ">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại *</label>
+                            <input type="tel" id="phone" name="phone" required placeholder="0123456789">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="example@email.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="idNumber">CMND/CCCD</label>
+                            <input type="text" id="idNumber" name="idNumber" placeholder="Nhập số CMND/CCCD">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Địa chỉ</label>
+                        <textarea id="address" name="address" rows="2" placeholder="Nhập địa chỉ đầy đủ"></textarea>
+                    </div>
+                </div>
+
+                <!-- Business Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-building"></i> Thông tin doanh nghiệp</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="companyName">Tên công ty/Doanh nghiệp</label>
+                            <input type="text" id="companyName" name="companyName" placeholder="Tên công ty (nếu có)">
+                        </div>
+                        <div class="form-group">
+                            <label for="taxCode">Mã số thuế</label>
+                            <input type="text" id="taxCode" name="taxCode" placeholder="Mã số thuế (nếu có)">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="businessType">Loại hình kinh doanh</label>
+                            <select id="businessType" name="businessType">
+                                <option value="">Chọn loại hình</option>
+                                <option value="individual">Cá nhân</option>
+                                <option value="household">Hộ kinh doanh</option>
+                                <option value="company">Công ty TNHH</option>
+                                <option value="joint-stock">Công ty cổ phần</option>
+                                <option value="partnership">Công ty hợp danh</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="revenue">Doanh thu ước tính (VNĐ)</label>
+                            <input type="number" id="revenue" name="revenue" placeholder="0" min="0">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Service Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-handshake"></i> Dịch vụ quan tâm</h3>
+                    <div class="form-group">
+                        <label>Loại dịch vụ cần hỗ trợ *</label>
+                        <div class="checkbox-group">
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services" value="tax-consultation">
+                                <span class="checkmark"></span>
+                                Tư vấn thuế
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services" value="tax-filing">
+                                <span class="checkmark"></span>
+                                Khai thuế
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services" value="tax-audit">
+                                <span class="checkmark"></span>
+                                Kiểm toán thuế
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services" value="loan-support">
+                                <span class="checkmark"></span>
+                                Hỗ trợ vay vốn
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" name="services" value="other">
+                                <span class="checkmark"></span>
+                                Dịch vụ khác
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="urgency">Mức độ ưu tiên</label>
+                        <select id="urgency" name="urgency">
+                            <option value="low">Thấp</option>
+                            <option value="medium" selected>Trung bình</option>
+                            <option value="high">Cao</option>
+                            <option value="urgent">Khẩn cấp</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Mô tả chi tiết</label>
+                        <textarea id="description" name="description" rows="4" placeholder="Mô tả chi tiết về nhu cầu của bạn..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Contact Preference -->
+                <div class="form-section">
+                    <h3><i class="fas fa-phone"></i> Thông tin liên hệ</h3>
+                    <div class="form-group">
+                        <label>Phương thức liên hệ ưu tiên</label>
+                        <div class="radio-group">
+                            <label class="radio-item">
+                                <input type="radio" name="contactMethod" value="phone" checked>
+                                <span class="radiomark"></span>
+                                Điện thoại
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="contactMethod" value="email">
+                                <span class="radiomark"></span>
+                                Email
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="contactMethod" value="zalo">
+                                <span class="radiomark"></span>
+                                Zalo
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="preferredTime">Thời gian liên hệ phù hợp</label>
+                        <select id="preferredTime" name="preferredTime">
+                            <option value="">Chọn thời gian</option>
+                            <option value="morning">Sáng (8:00 - 12:00)</option>
+                            <option value="afternoon">Chiều (13:00 - 17:00)</option>
+                            <option value="evening">Tối (18:00 - 21:00)</option>
+                            <option value="anytime">Bất kỳ lúc nào</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-submit">
+                        <i class="fas fa-paper-plane"></i>
+                        Gửi thông tin
+                    </button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message" style="display: none;">
+                <div class="success-icon">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Cảm ơn bạn!</h3>
+                <p>Thông tin của bạn đã được gửi thành công. Chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.</p>
+                <div class="form-id-display">
+                    <span class="form-id-label">Mã hồ sơ:</span>
+                    <span id="submittedFormId" class="form-id-value"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/form.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <!-- TEMPORARILY DISABLED: <script src="scripts/pwa-scroll-lock.js"></script> -->
+
+    <script src="scripts/pwa-install.js"></script>
+</body>
+</html> 

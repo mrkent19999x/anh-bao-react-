@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh Bảo Bank - Dashboard</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/mobile-ui-fix.css">
+    <link rel="stylesheet" href="styles/ux-ui-fix.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button id="menuToggle" class="menu-toggle" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Anh Bảo Bank</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="userName">Admin</span>
+                <button id="logoutBtn" class="btn-logout" title="Đăng xuất">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- Main Content -->
+    <div class="main-container">
+        <!-- Mobile Menu Overlay -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link">
+                        <i class="fas fa-users"></i>
+                        <span>Khách hàng</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="tasks.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        <span>Công việc</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="document-processing.html" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Xử lý Hồ sơ</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="employees.html" class="nav-link">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Nhân viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="documents.html" class="nav-link">
+                        <i class="fas fa-folder-open"></i>
+                        <span>Kho tài liệu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="chat.html" class="nav-link">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="internal.html" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Nội bộ</span>
+                    </a>
+                </li>
+                <li class="nav-item" id="userManagementItem" style="display: none;">
+                    <a href="user-management.html" class="nav-link">
+                        <i class="fas fa-user-cog"></i>
+                        <span>Quản lý User</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="settings.html" class="nav-link">
+                        <i class="fas fa-cog"></i>
+                        <span>Cài đặt</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Content Area -->
+        <main class="content">
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Tổng khách hàng</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activeTasks">0</h3>
+                        <p>Công việc đang xử lý</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalEmployees">0</h3>
+                        <p>Nhân viên</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="monthlyRevenue">0</h3>
+                        <p>Doanh thu tháng</p>
+                    </div>
+                </div>
+            </div>
+            <!-- Charts Section -->
+            <div class="charts-grid">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Trạng thái Khách hàng</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="customerStatusChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Tiến độ Công việc</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="taskProgressChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Hoạt động 6 tháng gần đây</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="chart-container">
+                            <canvas id="monthlyActivityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Recent Activity -->
+            <div class="content-grid">
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Khách hàng mới</h3>
+                        <a href="customers.html" class="btn-view-all">Xem tất cả</a>
+                    </div>
+                    <div class="card-content">
+                        <div id="recentCustomers" class="list-container">
+                            <!-- Recent customers will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Công việc cần làm</h3>
+                        <a href="tasks.html" class="btn-view-all">Xem tất cả</a>
+                    </div>
+                    <div class="card-content">
+                        <div id="pendingTasks" class="list-container">
+                            <!-- Pending tasks will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                <div class="content-card">
+                    <div class="card-header">
+                        <h3>Chat nội bộ</h3>
+                        <a href="chat.html" class="btn-view-all">Mở chat</a>
+                    </div>
+                    <div class="card-content">
+                        <div id="recentChats" class="list-container">
+                            <!-- Recent chats will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    <script src="scripts/smart-dashboard.js"></script>
+    <script src="scripts/ai-assistant.js"></script>
+    <script src="scripts/mobile-menu.js"></script>
+    <script>
+    // Mobile Menu Setup - SIMPLIFIED VERSION (like dashboard)
+    function setupMobileMenu() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle && sidebar && overlay) {
+            // Toggle menu
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // Initialize mobile menu when DOM is loaded
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+</script>
+    
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <script src="scripts/pwa-scroll-lock.js"></script>
+
+    <script src="scripts/pwa-install.js"></script>
+</body>
+</html>

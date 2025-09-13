@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Chatbot - CRM eTax</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .chatbot-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .bot-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.3);
+        }
+
+        .bot-info h1 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .bot-info p {
+            color: rgba(255, 255, 255, 0.8);
+            margin: 5px 0 0 0;
+            font-size: 14px;
+        }
+
+        .chat-main {
+            flex: 1;
+            display: flex;
+            gap: 20px;
+            min-height: 0;
+        }
+
+        .chat-area {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 80%;
+            animation: slideIn 0.3s ease;
+        }
+
+        .message.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message.bot {
+            align-self: flex-start;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .message.bot .message-avatar {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .message-content {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 18px;
+            padding: 12px 16px;
+            color: white;
+            font-size: 14px;
+            line-height: 1.4;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+        }
+
+        .message.bot .message-content {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-input-area {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            font-size: 14px;
+            resize: none;
+            min-height: 50px;
+            max-height: 120px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus {
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.2);
+        }
+
+        .chat-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3);
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sidebar-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-section h3 {
+            color: white;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quick-action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 10px 15px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quick-action-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .quick-action-btn i {
+            font-size: 16px;
+            color: #4facfe;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .suggestion-chip {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 6px 12px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .suggestion-chip:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .chat-main {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: -1;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chatbot-container">
+        <!-- Header -->
+        <div class="chatbot-header">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="bot-info">
+                <h1>AI Assistant</h1>
+                <p>Trợ lý thông minh cho CRM eTax</p>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="chat-main">
+            <!-- Chat Messages -->
+            <div class="chat-area">
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message bot">
+                        <div class="message-avatar">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="message-content">
+                            <div>Xin chào! Tôi là AI Assistant của hệ thống CRM eTax. Tôi có thể giúp bạn:</div>
+                            <div class="suggestions">
+                                <div class="suggestion-chip" onclick="sendQuickMessage('Hướng dẫn sử dụng hệ thống')">Hướng dẫn sử dụng</div>
+                                <div class="suggestion-chip" onclick="sendQuickMessage('Thống kê khách hàng')">Thống kê khách hàng</div>
+                                <div class="suggestion-chip" onclick="sendQuickMessage('Báo cáo công việc')">Báo cáo công việc</div>
+                                <div class="suggestion-chip" onclick="sendQuickMessage('Hỗ trợ kỹ thuật')">Hỗ trợ kỹ thuật</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chat Input -->
+                <div class="chat-input-area">
+                    <div class="chat-input-container">
+                        <textarea 
+                            class="chat-input" 
+                            id="chatInput" 
+                            placeholder="Nhập tin nhắn của bạn..."
+                            rows="1"
+                        ></textarea>
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Quick Actions -->
+                <div class="sidebar-section">
+                    <h3><i class="fas fa-bolt"></i> Thao tác nhanh</h3>
+                    <div class="quick-actions">
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Tạo khách hàng mới')">
+                            <i class="fas fa-user-plus"></i>
+                            Tạo khách hàng
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Tạo công việc mới')">
+                            <i class="fas fa-tasks"></i>
+                            Tạo công việc
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Xem báo cáo')">
+                            <i class="fas fa-chart-bar"></i>
+                            Xem báo cáo
+                        </button>
+                        <button class="quick-action-btn" onclick="sendQuickMessage('Hướng dẫn sử dụng')">
+                            <i class="fas fa-question-circle"></i>
+                            Hướng dẫn
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Chatbot {
+            constructor() {
+                this.messages = [];
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+            }
+
+            setupEventListeners() {
+                const chatInput = document.getElementById('chatInput');
+                const sendBtn = document.getElementById('sendBtn');
+
+                // Send message on Enter
+                chatInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+
+                // Auto resize textarea
+                chatInput.addEventListener('input', () => {
+                    this.autoResizeInput();
+                });
+
+                // Send button click
+                sendBtn.addEventListener('click', () => {
+                    this.sendMessage();
+                });
+            }
+
+            autoResizeInput() {
+                const chatInput = document.getElementById('chatInput');
+                chatInput.style.height = 'auto';
+                chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+            }
+
+            sendMessage() {
+                const chatInput = document.getElementById('chatInput');
+                const message = chatInput.value.trim();
+
+                if (!message) return;
+
+                // Add user message
+                this.addMessage(message, 'user');
+                chatInput.value = '';
+                this.autoResizeInput();
+
+                // Simulate AI response
+                setTimeout(() => {
+                    this.generateAIResponse(message);
+                }, 1000);
+            }
+
+            sendQuickMessage(message) {
+                const chatInput = document.getElementById('chatInput');
+                chatInput.value = message;
+                this.sendMessage();
+            }
+
+            addMessage(content, sender) {
+                const message = {
+                    id: Date.now(),
+                    content,
+                    sender,
+                    timestamp: new Date()
+                };
+
+                this.messages.push(message);
+                this.renderMessage(message);
+                this.scrollToBottom();
+            }
+
+            renderMessage(message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${message.sender}`;
+
+                const avatarIcon = message.sender === 'user' ? 'fas fa-user' : 'fas fa-robot';
+
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">
+                        <i class="${avatarIcon}"></i>
+                    </div>
+                    <div class="message-content">
+                        <div>${this.formatMessageContent(message.content)}</div>
+                    </div>
+                `;
+
+                chatMessages.appendChild(messageDiv);
+            }
+
+            formatMessageContent(content) {
+                // Convert URLs to links
+                const urlRegex = /(https?:\/\/[^\s]+)/g;
+                content = content.replace(urlRegex, '<a href="$1" target="_blank" style="color: #4facfe;">$1</a>');
+                
+                // Convert line breaks to <br>
+                content = content.replace(/\n/g, '<br>');
+                
+                return content;
+            }
+
+            generateAIResponse(userMessage) {
+                const responses = this.getAIResponses(userMessage);
+                const response = responses[Math.floor(Math.random() * responses.length)];
+                
+                this.addMessage(response, 'bot');
+            }
+
+            getAIResponses(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                
+                if (lowerMessage.includes('hướng dẫn') || lowerMessage.includes('sử dụng')) {
+                    return [
+                        'Tôi sẽ hướng dẫn bạn sử dụng hệ thống CRM eTax:\n\n1. **Dashboard**: Xem tổng quan và thống kê\n2. **Khách hàng**: Quản lý thông tin khách hàng\n3. **Công việc**: Tạo và theo dõi công việc\n4. **Báo cáo**: Xem các báo cáo chi tiết\n\nBạn muốn tìm hiểu phần nào cụ thể?',
+                        'Hệ thống CRM eTax có các tính năng chính:\n\n📊 **Dashboard**: Thống kê real-time\n👥 **Quản lý khách hàng**: CRUD đầy đủ\n📋 **Quản lý công việc**: Theo dõi tiến độ\n📈 **Báo cáo**: Phân tích dữ liệu\n\nBạn cần hỗ trợ gì thêm không?'
+                    ];
+                }
+                
+                if (lowerMessage.includes('khách hàng') || lowerMessage.includes('customer')) {
+                    return [
+                        '**Quản lý khách hàng** trong hệ thống:\n\n✅ Thêm khách hàng mới\n✅ Chỉnh sửa thông tin\n✅ Tìm kiếm và lọc\n✅ Xuất báo cáo\n✅ Phân loại khách hàng\n\nBạn muốn thực hiện thao tác nào?',
+                        'Để quản lý khách hàng hiệu quả:\n\n1. Vào trang "Khách hàng"\n2. Sử dụng nút "Thêm mới" để tạo\n3. Dùng thanh tìm kiếm để tìm\n4. Click vào từng khách hàng để chỉnh sửa\n5. Xuất báo cáo theo nhu cầu\n\nCần hỗ trợ thêm không?'
+                    ];
+                }
+                
+                if (lowerMessage.includes('công việc') || lowerMessage.includes('task')) {
+                    return [
+                        '**Quản lý công việc** bao gồm:\n\n📝 Tạo công việc mới\n👤 Phân công cho nhân viên\n⏰ Đặt deadline\n📊 Theo dõi tiến độ\n🔔 Nhắc nhở tự động\n\nBạn cần tạo công việc mới không?',
+                        'Hướng dẫn quản lý công việc:\n\n1. Vào trang "Công việc"\n2. Click "Tạo mới"\n3. Điền thông tin chi tiết\n4. Chọn nhân viên phụ trách\n5. Đặt deadline và ưu tiên\n6. Theo dõi trạng thái\n\nCần hỗ trợ gì thêm?'
+                    ];
+                }
+                
+                if (lowerMessage.includes('báo cáo') || lowerMessage.includes('report')) {
+                    return [
+                        '**Báo cáo** trong hệ thống:\n\n📊 Báo cáo khách hàng\n📈 Báo cáo doanh thu\n👥 Báo cáo nhân viên\n📋 Báo cáo công việc\n📅 Báo cáo theo thời gian\n\nBạn muốn xem báo cáo nào?',
+                        'Để xem báo cáo:\n\n1. Vào trang "Báo cáo"\n2. Chọn loại báo cáo\n3. Chọn khoảng thời gian\n4. Click "Tạo báo cáo"\n5. Xuất PDF/Excel nếu cần\n\nCần hỗ trợ thêm không?'
+                    ];
+                }
+                
+                // Default responses
+                return [
+                    'Cảm ơn bạn đã liên hệ! Tôi có thể giúp bạn với:\n\n• Hướng dẫn sử dụng hệ thống\n• Quản lý khách hàng\n• Quản lý công việc\n• Xem báo cáo\n• Hỗ trợ kỹ thuật\n\nBạn cần hỗ trợ gì?',
+                    'Tôi hiểu câu hỏi của bạn. Để hỗ trợ tốt nhất, bạn có thể:\n\n1. Sử dụng các nút "Thao tác nhanh" bên cạnh\n2. Đặt câu hỏi cụ thể hơn\n3. Mô tả chi tiết vấn đề bạn gặp\n\nTôi sẽ cố gắng hỗ trợ bạn tốt nhất!'
+                ];
+            }
+
+            scrollToBottom() {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+        }
+
+        // Initialize chatbot when page loads
+        let chatbot;
+        document.addEventListener('DOMContentLoaded', () => {
+            chatbot = new Chatbot();
+        });
+
+        // Global functions for onclick events
+        function sendMessage() {
+            if (chatbot) chatbot.sendMessage();
+        }
+
+        function sendQuickMessage(message) {
+            if (chatbot) chatbot.sendQuickMessage(message);
+        }
+    </script>
+</body>
+</html>

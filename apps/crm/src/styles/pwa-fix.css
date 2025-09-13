@@ -1,0 +1,299 @@
+/* PWA Viewport Fix for iPhone */
+@supports (-webkit-touch-callout: none) {
+  /* iOS Safari specific fixes */
+  
+  /* Fix viewport height for iPhone */
+  html, body {
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Fix status bar area - đồng nhất màu nền */
+  html {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  }
+  
+  body {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    margin: 0;
+  }
+  
+  /* Ensure main container takes full height */
+  .main-container {
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  /* Modal should not be affected by main-container overflow */
+  .modal {
+    overflow: visible !important;
+    position: fixed !important;
+    z-index: 10000 !important;
+  }
+  
+  /* Fix header positioning */
+  .header {
+    padding-top: env(safe-area-inset-top);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  }
+  
+  /* Adjust content area - khóa scroll */
+  .content {
+    padding-top: calc(60px + env(safe-area-inset-top));
+    padding-bottom: env(safe-area-inset-bottom);
+    height: calc(100vh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    position: relative;
+  }
+  
+  /* Fix modal positioning */
+  .modal {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    background: rgba(0, 0, 0, 0.8);
+    overflow: visible !important;
+    position: fixed !important;
+    z-index: 10000 !important;
+  }
+  
+  /* Fix sidebar height */
+  .sidebar {
+    padding-top: calc(60px + env(safe-area-inset-top));
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Khóa scroll cho toàn bộ trang */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Prevent double-tap zoom */
+  * {
+    touch-action: manipulation;
+  }
+  
+  /* Fix login page specifically */
+  .login-container {
+    height: 100vh;
+    height: -webkit-fill-available;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* Đảm bảo body login page cũng có màu nền đồng nhất */
+  body .login-container {
+    background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #3b82f6 100%);
+  }
+}
+
+/* General PWA optimizations */
+@media (display-mode: standalone) {
+  /* Hide browser UI elements when in standalone mode */
+  body {
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-tap-highlight-color: transparent;
+    overflow: hidden !important;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Modal should not be affected by body overflow */
+  body .modal {
+    overflow: visible !important;
+    position: fixed !important;
+    z-index: 10000 !important;
+  }
+  
+  /* Prevent pull-to-refresh và khóa scroll */
+  body {
+    overscroll-behavior: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: none;
+  }
+  
+  /* Fix scrolling issues - chỉ cho phép scroll trong content */
+  .content {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100vh - 60px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+  
+  /* Khóa scroll cho sidebar */
+  .sidebar {
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Ensure proper touch targets */
+  button, .btn, .nav-link {
+    min-height: 44px;
+    min-width: 44px;
+    touch-action: manipulation;
+  }
+  
+  /* Fix input zoom on focus */
+  input, select, textarea {
+    font-size: 16px;
+    touch-action: manipulation;
+  }
+  
+  /* Prevent double-tap zoom */
+  * {
+    touch-action: manipulation;
+  }
+  
+  /* Khóa scroll cho toàn bộ trang */
+  html {
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+/* Dark mode support for status bar */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --status-bar-bg: #1e3a8a;
+  }
+}
+
+/* Light mode support for status bar */
+@media (prefers-color-scheme: light) {
+  :root {
+    --status-bar-bg: #1e3a8a;
+  }
+}
+
+/* Fix for iPhone notch and home indicator */
+@supports (padding: max(0px)) {
+  body {
+    padding-top: max(env(safe-area-inset-top), 0px);
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+    padding-left: max(env(safe-area-inset-left), 0px);
+    padding-right: max(env(safe-area-inset-right), 0px);
+  }
+  
+  .header {
+    padding-top: max(env(safe-area-inset-top), 0px);
+  }
+  
+  .content {
+    padding-top: calc(60px + max(env(safe-area-inset-top), 0px));
+    padding-bottom: max(env(safe-area-inset-bottom), 0px);
+  }
+}
+
+/* Fix for landscape orientation */
+@media (orientation: landscape) and (max-height: 500px) {
+  .header {
+    position: relative;
+    padding-top: 0;
+  }
+  
+  .content {
+    padding-top: 0;
+  }
+  
+  .sidebar {
+    padding-top: 0;
+  }
+}
+
+/* Khóa cứng scroll và zoom cho PWA */
+@media (display-mode: standalone) {
+  /* Khóa hoàn toàn scroll cho body */
+  body {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+  }
+  
+  /* Khóa scroll cho html */
+  html {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  /* Chỉ cho phép scroll trong content area */
+  .content {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+  
+  /* Khóa double-tap zoom */
+  * {
+    touch-action: manipulation !important;
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  
+  /* Cho phép select trong input */
+  input, textarea, select {
+    -webkit-user-select: text !important;
+    touch-action: manipulation !important;
+  }
+  
+  /* Prevent pull-to-refresh */
+  body {
+    overscroll-behavior: none !important;
+  }
+  
+  /* Fix cho login page */
+  .login-container {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+} 

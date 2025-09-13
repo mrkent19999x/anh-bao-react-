@@ -1,0 +1,16 @@
+{
+  "name": "bao-cmr",
+  "version": "1.0.0",
+  "description": "## 📋 TỔNG QUAN",
+  "main": "crm-mcp.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.18.0",
+    "axios": "^1.12.1"
+  }
+}

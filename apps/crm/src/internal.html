@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Làm việc Nội bộ - Anh Bảo Bank</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/mobile-ui-fix.css">
+    <link rel="stylesheet" href="styles/ux-ui-fix.css">
+    <link rel="stylesheet" href="styles/internal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-spinner"></div>
+        <p>Đang tải...</p>
+    </div>
+
+    <!-- Security Check Modal -->
+    <div id="securityModal" class="modal security-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-shield-alt"></i> Xác thực Bảo mật</h2>
+            </div>
+            <div class="modal-body">
+                <div class="security-info">
+                    <i class="fas fa-lock"></i>
+                    <h3>Khu vực làm việc nội bộ</h3>
+                    <p>Chỉ dành cho Admin và Quản lý cấp cao</p>
+                </div>
+                <form id="securityForm">
+                    <div class="form-group">
+                        <label for="adminKey">Mã khóa Admin:</label>
+                        <input type="password" id="adminKey" name="adminKey" required placeholder="Nhập mã khóa admin">
+                    </div>
+                    <div class="form-group">
+                        <label for="userRole">Vai trò:</label>
+                        <select id="userRole" name="userRole" required>
+                            <option value="">Chọn vai trò</option>
+                            <option value="admin">Admin</option>
+                            <option value="manager">Quản lý cấp cao</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-unlock"></i> Xác thực
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-shield-alt"></i>
+                            <span>Anh Bảo Bank - Nội bộ</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="customers.html" class="nav-link">
+                <i class="fas fa-users"></i>
+                <span>Khách hàng</span>
+            </a>
+            <a href="tasks.html" class="nav-link">
+                <i class="fas fa-tasks"></i>
+                <span>Công việc</span>
+            </a>
+            <a href="documents.html" class="nav-link">
+                <i class="fas fa-folder-open"></i>
+                <span>Kho tài liệu</span>
+            </a>
+            <a href="chat.html" class="nav-link">
+                <i class="fas fa-comments"></i>
+                <span>Chat</span>
+            </a>
+            <a href="internal.html" class="nav-link active">
+                <i class="fas fa-cogs"></i>
+                <span>Nội bộ</span>
+            </a>
+        </div>
+        <div class="nav-user">
+            <div class="user-info">
+                <span id="userName">Đang tải...</span>
+                <small id="userRole">Nhân viên</small>
+            </div>
+            <button id="logoutBtn" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <div class="page-header">
+            <div class="header-content">
+                <h1><i class="fas fa-cogs"></i> Làm việc Nội bộ</h1>
+                <p>Khu vực xử lý dữ liệu khách hàng và quản lý sản phẩm</p>
+            </div>
+            <div class="header-actions">
+                <button id="uploadProductBtn" class="btn btn-primary">
+                    <i class="fas fa-upload"></i> Upload sản phẩm
+                </button>
+                <button id="exportDataBtn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> Xuất dữ liệu
+                </button>
+            </div>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon customers">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalCustomers">0</h3>
+                    <p>Tổng khách hàng</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon individual">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="individualCustomers">0</h3>
+                    <p>Hộ kinh doanh cá thể</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon business">
+                    <i class="fas fa-building"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="businessCustomers">0</h3>
+                    <p>Chủ doanh nghiệp</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon products">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-content">
+                    <h3 id="totalProducts">0</h3>
+                    <p>Sản phẩm</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer Type Tabs -->
+        <div class="customer-tabs">
+            <button class="tab-btn active" data-type="all">
+                <i class="fas fa-list"></i> Tất cả
+            </button>
+            <button class="tab-btn" data-type="individual">
+                <i class="fas fa-user"></i> Hộ kinh doanh cá thể
+            </button>
+            <button class="tab-btn" data-type="business">
+                <i class="fas fa-building"></i> Chủ doanh nghiệp
+            </button>
+        </div>
+
+        <!-- Tools Section -->
+        <div class="tools-section">
+            <div class="tools-header">
+                <h2><i class="fas fa-tools"></i> Công cụ xử lý</h2>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Tính dòng tiền</h3>
+                        <p>Upload file Excel để tính toán dòng tiền cho khách hàng</p>
+                        <button class="btn btn-primary" onclick="internalManager.openExcelTool()">
+                            <i class="fas fa-upload"></i> Upload Excel
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Tờ khai thuế XML</h3>
+                        <p>Upload file XML tờ khai thuế của khách hàng</p>
+                        <button class="btn btn-primary" onclick="internalManager.openXMLTool()">
+                            <i class="fas fa-upload"></i> Upload XML
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Phân tích dữ liệu</h3>
+                        <p>Phân tích và báo cáo dữ liệu khách hàng</p>
+                        <button class="btn btn-primary" onclick="internalManager.openAnalytics()">
+                            <i class="fas fa-chart-bar"></i> Xem báo cáo
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="tool-content">
+                        <h3>Cài đặt hệ thống</h3>
+                        <p>Cấu hình và quản lý hệ thống nội bộ</p>
+                        <button class="btn btn-primary" onclick="internalManager.openSettings()">
+                            <i class="fas fa-cog"></i> Cài đặt
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customers List -->
+        <div class="customers-section">
+            <div class="section-header">
+                <h2><i class="fas fa-users"></i> Danh sách khách hàng</h2>
+                <div class="section-actions">
+                    <div class="search-box">
+                        <input type="text" id="customerSearch" placeholder="Tìm kiếm khách hàng...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <select id="statusFilter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="data-check">Đã data check</option>
+                        <option value="processing">Đang xử lý</option>
+                        <option value="completed">Hoàn thành</option>
+                    </select>
+                </div>
+            </div>
+            <div class="customers-grid" id="customersGrid">
+                <!-- Customers will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Products Section -->
+        <div class="products-section">
+            <div class="section-header">
+                <h2><i class="fas fa-box"></i> Danh sách sản phẩm</h2>
+                <div class="section-actions">
+                    <button class="btn btn-primary" onclick="internalManager.openProductModal()">
+                        <i class="fas fa-plus"></i> Thêm sản phẩm
+                    </button>
+                </div>
+            </div>
+            <div class="products-grid" id="productsGrid">
+                <!-- Products will be loaded here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Upload Product Modal -->
+    <div id="productModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2>Quản lý sản phẩm</h2>
+                <button class="modal-close" id="closeProductModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <form id="productForm">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="productName">Tên sản phẩm *</label>
+                        <input type="text" id="productName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCode">Mã sản phẩm *</label>
+                        <input type="text" id="productCode" name="code" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="productCategory">Danh mục *</label>
+                        <select id="productCategory" name="category" required>
+                            <option value="">Chọn danh mục</option>
+                            <option value="individual">Hộ kinh doanh cá thể</option>
+                            <option value="business">Chủ doanh nghiệp</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="productPrice">Giá (VND) *</label>
+                        <input type="number" id="productPrice" name="price" required>
+                    </div>
+                </div>
+                <div class="form-group full-width">
+                    <label for="productDescription">Mô tả sản phẩm</label>
+                    <textarea id="productDescription" name="description" rows="4"></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label for="productGuide">Hướng dẫn sử dụng</label>
+                    <textarea id="productGuide" name="guide" rows="6"></textarea>
+                </div>
+                <div class="form-group full-width">
+                    <label for="productFiles">Tài liệu đính kèm</label>
+                    <input type="file" id="productFiles" name="files" multiple accept=".pdf,.doc,.docx,.xls,.xlsx">
+                    <div class="file-preview" id="productFilePreview"></div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="cancelProduct" class="btn btn-secondary">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu sản phẩm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Excel Tool Modal -->
+    <div id="excelToolModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-excel"></i> Công cụ tính dòng tiền</h2>
+                <button class="modal-close" id="closeExcelModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tool-upload-area">
+                    <input type="file" id="excelFile" accept=".xls,.xlsx" style="display: none;">
+                    <div class="upload-content">
+                        <i class="fas fa-file-excel"></i>
+                        <h3>Upload file Excel</h3>
+                        <p>Kéo thả file Excel hoặc click để chọn file</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('excelFile').click()">
+                            <i class="fas fa-upload"></i> Chọn file
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-preview" id="excelPreview">
+                    <!-- Excel preview will be shown here -->
+                </div>
+                <div class="tool-actions">
+                    <button class="btn btn-secondary" onclick="internalManager.closeExcelTool()">Hủy</button>
+                    <button class="btn btn-primary" onclick="internalManager.processExcel()">
+                        <i class="fas fa-calculator"></i> Tính toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- XML Tool Modal -->
+    <div id="xmlToolModal" class="modal">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-code"></i> Công cụ xử lý XML</h2>
+                <button class="modal-close" id="closeXMLModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tool-upload-area">
+                    <input type="file" id="xmlFile" accept=".xml" style="display: none;">
+                    <div class="upload-content">
+                        <i class="fas fa-file-code"></i>
+                        <h3>Upload file XML</h3>
+                        <p>Kéo thả file XML tờ khai thuế hoặc click để chọn file</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('xmlFile').click()">
+                            <i class="fas fa-upload"></i> Chọn file
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-preview" id="xmlPreview">
+                    <!-- XML preview will be shown here -->
+                </div>
+                <div class="tool-actions">
+                    <button class="btn btn-secondary" onclick="internalManager.closeXMLTool()">Hủy</button>
+                    <button class="btn btn-primary" onclick="internalManager.processXML()">
+                        <i class="fas fa-cog"></i> Xử lý
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Analytics Modal -->
+    <div id="analyticsModal" class="modal">
+        <div class="modal-content extra-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-chart-line"></i> Phân tích dữ liệu</h2>
+                <button class="modal-close" id="closeAnalyticsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="analytics-grid">
+                    <div class="chart-container">
+                        <h3>Phân bố khách hàng</h3>
+                        <canvas id="customerChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Doanh thu theo tháng</h3>
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Trạng thái xử lý</h3>
+                        <canvas id="statusChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Hiệu suất nhân viên</h3>
+                        <canvas id="performanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-cogs"></i> Cài đặt hệ thống</h2>
+                <button class="modal-close" id="closeSettingsModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="settingsForm">
+                    <div class="form-group">
+                        <label for="adminKey">Mã khóa Admin mới:</label>
+                        <input type="password" id="newAdminKey" name="newAdminKey" placeholder="Nhập mã khóa mới">
+                    </div>
+                    <div class="form-group">
+                        <label for="maxFileSize">Kích thước file tối đa (MB):</label>
+                        <input type="number" id="maxFileSize" name="maxFileSize" value="50">
+                    </div>
+                    <div class="form-group">
+                        <label for="autoBackup">Tự động sao lưu:</label>
+                        <select id="autoBackup" name="autoBackup">
+                            <option value="daily">Hàng ngày</option>
+                            <option value="weekly">Hàng tuần</option>
+                            <option value="monthly">Hàng tháng</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" id="cancelSettings" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary">Lưu cài đặt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Floating AI Chatbot -->
+    <div id="floatingChatbot" class="floating-chatbot">
+        <button class="chatbot-toggle" onclick="toggleChatbot()" title="AI Assistant">
+            <i class="fas fa-robot"></i>
+        </button>
+        <div class="chatbot-panel" id="chatbotPanel">
+            <div class="chatbot-header">
+                <h3><i class="fas fa-robot"></i> AI Assistant</h3>
+                <button class="close-chatbot" onclick="toggleChatbot()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chatbot-messages" id="chatbotMessages">
+                <div class="message bot">
+                    <div class="message-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="message-content">
+                        <p>Xin chào! Tôi là AI Assistant. Tôi có thể giúp bạn:</p>
+                        <ul>
+                            <li>Hỗ trợ xử lý hồ sơ</li>
+                            <li>Trả lời câu hỏi về sản phẩm</li>
+                            <li>Hướng dẫn quy trình</li>
+                            <li>Đào tạo và học tập</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="chatbot-input">
+                <input type="text" id="chatbotInput" placeholder="Nhập câu hỏi...">
+                <button onclick="sendChatbotMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-storage-compat.js"></script>
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/internal.js"></script>
+    <script src="scripts/ai-assistant.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <script src="scripts/pwa-scroll-lock.js"></script>
+    <script>
+    // Mobile Menu Setup - SIMPLIFIED VERSION (like dashboard)
+    function setupMobileMenu() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle && sidebar && overlay) {
+            // Toggle menu
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // Initialize mobile menu when DOM is loaded
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+</script>
+
+
+    <script src="scripts/pwa-install.js"></script>
+    
+    <!-- Chatbot Functions -->
+    <script>
+        // Chatbot functionality
+        function toggleChatbot() {
+            const panel = document.getElementById('chatbotPanel');
+            panel.classList.toggle('open');
+        }
+
+        function sendChatbotMessage() {
+            const input = document.getElementById('chatbotInput');
+            const message = input.value.trim();
+            if (message) {
+                addChatbotMessage(message, 'user');
+                input.value = '';
+                
+                // Simulate AI response
+                setTimeout(() => {
+                    const responses = [
+                        'Tôi hiểu câu hỏi của bạn. Hãy để tôi tìm thông tin...',
+                        'Đây là hướng dẫn chi tiết cho bạn...',
+                        'Dựa trên dữ liệu, tôi khuyên bạn nên...',
+                        'Cảm ơn bạn đã hỏi! Tôi sẽ hỗ trợ bạn ngay.'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addChatbotMessage(randomResponse, 'bot');
+                }, 1000);
+            }
+        }
+
+        function addChatbotMessage(message, sender) {
+            const messages = document.getElementById('chatbotMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar">
+                    <i class="fas fa-${sender === 'bot' ? 'robot' : 'user'}"></i>
+                </div>
+                <div class="message-content">
+                    <p>${message}</p>
+                </div>
+            `;
+            
+            messages.appendChild(messageDiv);
+            messages.scrollTop = messages.scrollHeight;
+        }
+
+        // Setup chatbot input
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatbotInput = document.getElementById('chatbotInput');
+            if (chatbotInput) {
+                chatbotInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        sendChatbotMessage();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html> 

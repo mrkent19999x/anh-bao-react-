@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh Bảo Bank - Quản lý Khách hàng</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1e3a8a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Anh Bảo Bank">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="apple-touch-icon" href="manifest.json">
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/pwa-fix.css">
+    <link rel="stylesheet" href="styles/mobile-ui-fix.css">
+    <link rel="stylesheet" href="styles/ux-ui-fix.css">
+    <link rel="stylesheet" href="styles/customers.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button id="menuToggle" class="menu-toggle" title="Menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="logo">
+                <i class="fas fa-chart-line"></i>
+                <span>Anh Bảo Bank</span>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="user-info">
+                <span id="userName">Admin</span>
+                <button class="btn-logout" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Mobile Menu Overlay -->
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="customers.html" class="nav-link active">
+                        <i class="fas fa-users"></i>
+                        <span>Khách hàng</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="tasks.html" class="nav-link">
+                        <i class="fas fa-tasks"></i>
+                        <span>Công việc</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="employees.html" class="nav-link">
+                        <i class="fas fa-user-tie"></i>
+                        <span>Nhân viên</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="documents.html" class="nav-link">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Tài liệu</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="chat.html" class="nav-link">
+                        <i class="fas fa-comments"></i>
+                        <span>Chat</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="reports.html" class="nav-link">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Báo cáo</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="internal.html" class="nav-link">
+                        <i class="fas fa-cogs"></i>
+                        <span>Nội bộ</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Content -->
+        <main class="content">
+            <div class="content-header">
+                <h1><i class="fas fa-users"></i> Quản lý Khách hàng</h1>
+                <button class="btn btn-primary" onclick="openAddCustomerModal()">
+                        <i class="fas fa-plus"></i>
+                        Thêm khách hàng
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportToCSV()">
+                        <i class="fas fa-file-csv"></i>
+                        Xuất ra CSV
+                    </button>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalCustomers">0</h3>
+                        <p>Tổng khách hàng</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="activeCustomers">0</h3>
+                        <p>Khách hàng hoạt động</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="newCustomers">0</h3>
+                        <p>Khách hàng mới</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="totalRevenue">0</h3>
+                        <p>Tổng doanh thu (VNĐ)</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="filter-group">
+                    <label>Trạng thái:</label>
+                    <select id="statusFilter">
+                        <option value="">Tất cả</option>
+                        <option value="pending">Đã tiếp nhận</option>
+                        <option value="processing">Đang xử lý</option>
+                        <option value="waiting">Đợi bổ sung giấy tờ</option>
+                        <option value="completed">Đã hoàn thành</option>
+                        <option value="active">Hoạt động</option>
+                        <option value="inactive">Không hoạt động</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Loại khách hàng:</label>
+                    <select id="typeFilter">
+                        <option value="">Tất cả</option>
+                        <option value="individual">Cá nhân</option>
+                        <option value="business">Doanh nghiệp</option>
+                        <option value="vip">VIP</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Nhân viên phụ trách:</label>
+                    <select id="employeeFilter">
+                        <option value="">Tất cả</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Customers Table -->
+            <div class="content-card">
+                <div class="card-header">
+                    <h3>Danh sách khách hàng</h3>
+                    <div class="search-box">
+                        <input type="text" id="searchCustomer" placeholder="Tìm kiếm khách hàng...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="card-content">
+            <div class="table-container">
+                <table class="customers-table">
+                    <thead>
+                        <tr>
+                                    <th>Thông tin</th>
+                                    <th>Liên hệ</th>
+                                    <th>Loại</th>
+                                    <th>Trạng thái</th>
+                            <th>Nhân viên phụ trách</th>
+                                    <th>Doanh thu</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customersTableBody">
+                                <!-- Customers will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Customer Modal -->
+    <div id="customerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Thêm khách hàng</h2>
+                <span class="close" onclick="closeCustomerModal()">&times;</span>
+            </div>
+            <form id="customerForm">
+                <div class="form-row">
+                        <div class="form-group">
+                        <label for="fullName">Họ tên/Công ty *</label>
+                        <input type="text" id="fullName" required>
+                        </div>
+                        <div class="form-group">
+                        <label for="customerType">Loại khách hàng *</label>
+                        <select id="customerType" required>
+                            <option value="">Chọn loại</option>
+                            <option value="individual">Cá nhân</option>
+                            <option value="business">Doanh nghiệp</option>
+                            <option value="vip">VIP</option>
+                        </select>
+                    </div>
+                        </div>
+                <div class="form-row">
+                        <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email">
+                    </div>
+                        <div class="form-group">
+                        <label for="phone">Số điện thoại *</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                        </div>
+                        <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <textarea id="address" rows="2"></textarea>
+                        </div>
+                <div class="form-row">
+                        <div class="form-group">
+                        <label for="taxCode">Mã số thuế</label>
+                        <input type="text" id="taxCode">
+                    </div>
+                        <div class="form-group">
+                            <label for="assignedTo">Nhân viên phụ trách</label>
+                        <select id="assignedTo">
+                                <option value="">Chọn nhân viên</option>
+                            </select>
+                        </div>
+                </div>
+                <div class="form-row">
+                        <div class="form-group">
+                            <label for="status">Trạng thái</label>
+                        <select id="status">
+                            <option value="pending">Đã tiếp nhận</option>
+                                <option value="processing">Đang xử lý</option>
+                            <option value="waiting">Đợi bổ sung giấy tờ</option>
+                            <option value="completed">Đã hoàn thành</option>
+                            <option value="active">Hoạt động</option>
+                            <option value="inactive">Không hoạt động</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                        <label for="revenue">Doanh thu (VNĐ)</label>
+                        <input type="number" id="revenue" min="0">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="notes">Ghi chú</label>
+                    <textarea id="notes" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeCustomerModal()">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
+    <script src="scripts/firebase-config.js"></script>
+    <script src="scripts/auth.js"></script>
+    <script src="scripts/customers.js"></script>
+    <!-- PWA Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js').catch(console.error);
+            });
+        }
+    </script>
+    <script src="scripts/pwa-scroll-lock.js"></script>
+    <script src="scripts/mobile-menu.js"></script>
+    <script>
+    // Mobile Menu Setup - SIMPLIFIED VERSION (like dashboard)
+    function setupMobileMenu() {
+        const menuToggle = document.getElementById('menuToggle');
+        const sidebar = document.querySelector('.sidebar');
+        const overlay = document.getElementById('sidebarOverlay');
+
+        if (menuToggle && sidebar && overlay) {
+            // Toggle menu
+            menuToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+                overlay.classList.toggle('active');
+            });
+
+            // Close menu when clicking overlay
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+            });
+
+            // Close menu when clicking a nav link
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    sidebar.classList.remove('open');
+                    overlay.classList.remove('active');
+                });
+            });
+        }
+    }
+
+    // Initialize mobile menu when DOM is loaded
+    document.addEventListener('DOMContentLoaded', setupMobileMenu);
+</script>
+
+
+    <script src="scripts/pwa-install.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+</body>
+</html> 
