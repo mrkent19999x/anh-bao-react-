@@ -153,7 +153,7 @@ export default function LoginPage() {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={setRememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <Label htmlFor="remember" className="text-sm text-gray-300">
                     Ghi nhớ đăng nhập
