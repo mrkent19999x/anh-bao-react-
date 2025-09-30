@@ -102,7 +102,7 @@
         <div class="info">
             <strong>Thông tin tài khoản mới:</strong><br>
             Email: admin@anhbao.com<br>
-            Password: password123
+            Password: [REDACTED - Use environment variable]
         </div>
         
         <button id="resetBtn" class="btn">Xóa Admin Cũ & Tạo Mới</button>
@@ -140,7 +140,7 @@
             try {
                 // Đăng nhập với tài khoản admin hiện tại (nếu có)
                 const email = 'admin@anhbao.com';
-                const password = 'password123';
+                const password = process.env.ADMIN_PASSWORD || 'CHANGE_ME_IN_PRODUCTION';
                 
                 console.log('Đang thử đăng nhập để xóa tài khoản...');
                 
@@ -214,7 +214,7 @@
             
             try {
                 const email = 'admin@anhbao.com';
-                const password = 'password123';
+                const password = process.env.ADMIN_PASSWORD || 'CHANGE_ME_IN_PRODUCTION';
                 const fullName = 'Admin Anh Bảo';
                 const phone = '0123456789';
                 

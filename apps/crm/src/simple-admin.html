@@ -84,7 +84,7 @@
         <div class="info">
             <strong>Thông tin tài khoản sẽ tạo:</strong><br>
             Email: admin@anhbao.com<br>
-            Password: password123<br>
+            Password: [REDACTED - Use environment variable]<br>
             Tên: Admin Anh Bảo
         </div>
         
@@ -120,7 +120,7 @@
             
             try {
                 const email = 'admin@anhbao.com';
-                const password = 'password123';
+                const password = process.env.ADMIN_PASSWORD || 'CHANGE_ME_IN_PRODUCTION';
                 const fullName = 'Admin Anh Bảo';
                 const phone = '0123456789';
                 
