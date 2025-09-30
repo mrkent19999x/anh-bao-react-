@@ -154,19 +154,19 @@ class CustomersManager {
             row.innerHTML = `
                 <td>
                     <div class="customer-info">
-                        <div class="customer-name">${customer.fullName || 'N/A'}</div>
-                        <div class="customer-tax">${customer.taxCode ? `MST: ${customer.taxCode}` : ''}</div>
+                        <div class="customer-name">${SecurityUtils.escapeHtml(customer.fullName || 'N/A')}</div>
+                        <div class="customer-tax">${customer.taxCode ? `MST: ${SecurityUtils.escapeHtml(customer.taxCode)}` : ''}</div>
                     </div>
                 </td>
                 <td>
                     <div class="contact-info">
-                        <div class="contact-email">${customer.email || 'N/A'}</div>
-                        <div class="contact-phone">${customer.phone || 'N/A'}</div>
+                        <div class="contact-email">${SecurityUtils.escapeHtml(customer.email || 'N/A')}</div>
+                        <div class="contact-phone">${SecurityUtils.escapeHtml(customer.phone || 'N/A')}</div>
                     </div>
                 </td>
                 <td><span class="type-badge ${customer.customerType || 'individual'}">${this.getTypeDisplayName(customer.customerType)}</span></td>
                 <td><span class="status-badge ${customer.status || 'active'}">${this.getStatusDisplayName(customer.status)}</span></td>
-                <td>${assignedEmployee ? (assignedEmployee.fullName || assignedEmployee.email) : 'Chưa gán'}</td>
+                <td>${assignedEmployee ? SecurityUtils.escapeHtml(assignedEmployee.fullName || assignedEmployee.email) : 'Chưa gán'}</td>
                 <td class="revenue-amount ${!customer.revenue || customer.revenue === 0 ? 'zero' : ''}">${this.formatCurrency(customer.revenue)}</td>
                 <td>
                     <div class="action-buttons">
@@ -237,19 +237,19 @@ class CustomersManager {
             row.innerHTML = `
                 <td>
                     <div class="customer-info">
-                        <div class="customer-name">${customer.fullName || 'N/A'}</div>
-                        <div class="customer-tax">${customer.taxCode ? `MST: ${customer.taxCode}` : ''}</div>
+                        <div class="customer-name">${SecurityUtils.escapeHtml(customer.fullName || 'N/A')}</div>
+                        <div class="customer-tax">${customer.taxCode ? `MST: ${SecurityUtils.escapeHtml(customer.taxCode)}` : ''}</div>
                     </div>
                 </td>
                 <td>
                     <div class="contact-info">
-                        <div class="contact-email">${customer.email || 'N/A'}</div>
-                        <div class="contact-phone">${customer.phone || 'N/A'}</div>
+                        <div class="contact-email">${SecurityUtils.escapeHtml(customer.email || 'N/A')}</div>
+                        <div class="contact-phone">${SecurityUtils.escapeHtml(customer.phone || 'N/A')}</div>
                     </div>
                 </td>
                 <td><span class="type-badge ${customer.customerType || 'individual'}">${this.getTypeDisplayName(customer.customerType)}</span></td>
                 <td><span class="status-badge ${customer.status || 'active'}">${this.getStatusDisplayName(customer.status)}</span></td>
-                <td>${assignedEmployee ? (assignedEmployee.fullName || assignedEmployee.email) : 'Chưa gán'}</td>
+                <td>${assignedEmployee ? SecurityUtils.escapeHtml(assignedEmployee.fullName || assignedEmployee.email) : 'Chưa gán'}</td>
                 <td class="revenue-amount ${!customer.revenue || customer.revenue === 0 ? 'zero' : ''}">${this.formatCurrency(customer.revenue)}</td>
                 <td>
                     <div class="action-buttons">

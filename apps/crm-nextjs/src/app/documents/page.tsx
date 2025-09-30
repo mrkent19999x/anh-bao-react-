@@ -18,6 +18,8 @@ import {
   Trash2,
   Share,
   FileText,
+  Check,
+  Clock,
   Image,
   File,
   Video,
